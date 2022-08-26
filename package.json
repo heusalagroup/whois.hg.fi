@@ -1,0 +1,49 @@
+{
+  "name": "whois.hg.fi",
+  "version": "0.1.0",
+  "description": "Whois HTTP Backend",
+  "main": "dist/whois.hg.fi.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start-prod": "node dist/whois.hg.fi.js",
+    "start": "ts-node src/whois.hg.fi.ts",
+    "build": "rollup -c"
+  },
+  "keywords": [
+    "whois",
+    "typescript",
+    "backend",
+    "rest",
+    "nodejs",
+    "spring",
+    "spring-boot"
+  ],
+  "author": "Jaakko Heusala <jheusala@iki.fi>",
+  "license": "MIT",
+  "private": true,
+  "bin": {
+    "whois.hg.fi": "dist/whois.hg.fi.js"
+  },
+  "dependencies": {
+    "@babel/cli": "^7.18.10",
+    "@babel/core": "^7.18.13",
+    "@babel/preset-env": "^7.18.10",
+    "@babel/preset-typescript": "^7.18.6",
+    "@rollup/plugin-babel": "^5.3.1",
+    "@rollup/plugin-commonjs": "^22.0.2",
+    "@rollup/plugin-inject": "^4.0.4",
+    "@rollup/plugin-json": "^4.1.0",
+    "@rollup/plugin-node-resolve": "^13.3.0",
+    "@rollup/plugin-replace": "^4.0.0",
+    "@rollup/plugin-typescript": "^8.4.0",
+    "@types/lodash": "^4.14.184",
+    "@types/node": "^18.7.13",
+    "lodash": "^4.17.21",
+    "rollup": "^2.78.1",
+    "rollup-plugin-uglify": "^6.0.4",
+    "ts-node": "^10.9.1",
+    "tslib": "^2.4.0",
+    "typescript": "^4.8.2"
+  },
+  "devDependencies": {}
+}
