@@ -1,12 +1,12 @@
 {
-  "name": "whois.hg.fi",
+  "name": "hg-whois",
   "version": "0.1.0",
   "description": "Whois HTTP Backend",
-  "main": "dist/whois.hg.fi.js",
+  "main": "dist/hg-whois.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "start-prod": "node dist/whois.hg.fi.js",
-    "start": "ts-node src/whois.hg.fi.ts",
+    "start-prod": "node dist/hg-whois.js",
+    "start": "ts-node src/hg-whois.ts",
     "build": "rollup -c"
   },
   "keywords": [
@@ -22,9 +22,9 @@
   "license": "MIT",
   "private": true,
   "bin": {
-    "whois.hg.fi": "dist/whois.hg.fi.js"
+    "hg-whois": "dist/hg-whois.js"
   },
-  "dependencies": {
+  "devDependencies": {
     "@babel/cli": "^7.18.10",
     "@babel/core": "^7.18.13",
     "@babel/preset-env": "^7.18.10",
@@ -44,6 +44,5 @@
     "ts-node": "^10.9.1",
     "tslib": "^2.4.0",
     "typescript": "^4.8.2"
-  },
-  "devDependencies": {}
+  }
 }

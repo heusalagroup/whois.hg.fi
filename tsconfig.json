@@ -29,6 +29,6 @@
 
   },
   "include": [
-    "./src/whois.hg.fi.ts"
+    "./src/hg-whois.ts"
   ]
 }

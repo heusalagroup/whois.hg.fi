@@ -21,10 +21,12 @@ import { RequestClient } from "./fi/hg/core/RequestClient";
 import { CommandArgumentUtils } from "./fi/hg/core/cmd/utils/CommandArgumentUtils";
 import { ParsedCommandArgumentStatus } from "./fi/hg/core/cmd/types/ParsedCommandArgumentStatus";
 import { RequestServer } from "./fi/hg/core/RequestServer";
-import { BackendController } from "./controllers/BackendController";
+import { FiHgWhoisBackendController } from "./controllers/FiHgWhoisBackendController";
 import { RequestRouter } from "./fi/hg/core/requestServer/RequestRouter";
 import { Headers } from "./fi/hg/core/request/Headers";
 import { BUILD_USAGE_URL, BUILD_WITH_FULL_USAGE } from "./constants/build";
+import { NodeWhoisService } from "./fi/hg/node/services/NodeWhoisService";
+import { SERVERS } from "./constants/servers";
 
 const LOG = LogService.createLogger('main');
 
@@ -53,8 +55,14 @@ export async function main (
             return exitStatus;
         }
 
+        const whoisService = new NodeWhoisService(
+            SERVERS
+        );
+
+        FiHgWhoisBackendController.setWhoisService(whoisService);
+
         const server = new RequestServer(BACKEND_URL);
-        server.attachController(BackendController);
+        server.attachController(FiHgWhoisBackendController);
         server.start();
 
         let serverListener : any = undefined;

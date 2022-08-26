@@ -8,15 +8,22 @@ import {
 import { ReadonlyJsonObject } from "../fi/hg/core/Json";
 import { ResponseEntity } from "../fi/hg/core/request/ResponseEntity";
 import { LogService } from "../fi/hg/core/LogService";
+import { WhoisLookupResult, WhoisService } from "../fi/hg/core/whois/WhoisService";
 
-const LOG = LogService.createLogger('BackendController');
+const LOG = LogService.createLogger('FiHgWhoisBackendController');
 
 @RequestMapping("/")
-export class BackendController {
+export class FiHgWhoisBackendController {
+
+    private static _whois : WhoisService | undefined;
+
+    public static setWhoisService (service : WhoisService) {
+        this._whois = service;
+    }
 
     @GetMapping("/")
     public static async getIndex (
-        @RequestHeader('X-Authorization', {
+        @RequestHeader('Authorization', {
             required: false,
             defaultValue: ''
         })
@@ -24,8 +31,10 @@ export class BackendController {
     ): Promise<ResponseEntity<ReadonlyJsonObject | {readonly error: string}>> {
         try {
 
+            const payload : readonly WhoisLookupResult[] = await this._whois.whoisLookup('google.com');
+
             return ResponseEntity.ok({
-                hello: 'world'
+                payload: payload
             } as unknown as ReadonlyJsonObject);
 
         } catch (err) {
