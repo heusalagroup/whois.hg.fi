@@ -3,12 +3,14 @@
 import {
     GetMapping,
     RequestHeader,
-    RequestMapping,
+    RequestMapping, RequestParam
 } from "../fi/hg/core/Request";
-import { ReadonlyJsonObject } from "../fi/hg/core/Json";
 import { ResponseEntity } from "../fi/hg/core/request/ResponseEntity";
 import { LogService } from "../fi/hg/core/LogService";
 import { WhoisLookupResult, WhoisService } from "../fi/hg/core/whois/WhoisService";
+import { createErrorDTO, ErrorDTO } from "../fi/hg/core/types/ErrorDTO";
+import { createWhoisDTO, WhoisDTO } from "../fi/hg/core/whois/types/WhoisDTO";
+import { isString } from "../fi/hg/core/modules/lodash";
 
 const LOG = LogService.createLogger('FiHgWhoisBackendController');
 
@@ -27,21 +29,23 @@ export class FiHgWhoisBackendController {
             required: false,
             defaultValue: ''
         })
-        token: string
-    ): Promise<ResponseEntity<ReadonlyJsonObject | {readonly error: string}>> {
+        token: string,
+        @RequestParam('a')
+        address: string
+    ): Promise<ResponseEntity<WhoisDTO | ErrorDTO>> {
         try {
-
-            const payload : readonly WhoisLookupResult[] = await this._whois.whoisLookup('google.com');
-
-            return ResponseEntity.ok({
-                payload: payload
-            } as unknown as ReadonlyJsonObject);
-
+            if (!( isString(address) && address )) {
+                return ResponseEntity.badRequest<ErrorDTO>().body(
+                    createErrorDTO('Lookup address (Query param "a") must be defined and a string', 400)
+                );
+            }
+            const payload : readonly WhoisLookupResult[] = await this._whois.whoisLookup(address)
+            return ResponseEntity.ok<WhoisDTO>( createWhoisDTO(payload) );
         } catch (err) {
             LOG.error(`ERROR: `, err);
-            return ResponseEntity.internalServerError<{readonly error: string}>().body({
-                error: 'Internal Server Error'
-            });
+            return ResponseEntity.internalServerError<ErrorDTO>().body(
+                createErrorDTO('Internal Server Error', 500)
+            );
         }
     }
 
