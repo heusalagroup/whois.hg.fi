@@ -25,8 +25,9 @@ import { FiHgWhoisBackendController } from "./controllers/FiHgWhoisBackendContro
 import { RequestRouter } from "./fi/hg/core/requestServer/RequestRouter";
 import { Headers } from "./fi/hg/core/request/Headers";
 import { BUILD_USAGE_URL, BUILD_WITH_FULL_USAGE } from "./constants/build";
-import { NodeWhoisService } from "./fi/hg/node/services/NodeWhoisService";
+import { NodeWhoisService } from "./fi/hg/node/services/whois/NodeWhoisService";
 import { SERVERS } from "./constants/servers";
+import { NodeWhoisServerRegistryService } from "./fi/hg/node/services/whois/NodeWhoisServerRegistryService";
 
 const LOG = LogService.createLogger('main');
 
@@ -55,11 +56,14 @@ export async function main (
             return exitStatus;
         }
 
-        const whoisService = new NodeWhoisService(
+        const whoisService = new NodeWhoisService();
+
+        const whoisServerRegistry = new NodeWhoisServerRegistryService(
             SERVERS
         );
 
         FiHgWhoisBackendController.setWhoisService(whoisService);
+        FiHgWhoisBackendController.setWhoisRegistryService(whoisServerRegistry);
 
         const server = new RequestServer(BACKEND_URL);
         server.attachController(FiHgWhoisBackendController);

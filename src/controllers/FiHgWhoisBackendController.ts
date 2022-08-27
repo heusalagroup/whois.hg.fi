@@ -7,10 +7,12 @@ import {
 } from "../fi/hg/core/Request";
 import { ResponseEntity } from "../fi/hg/core/request/ResponseEntity";
 import { LogService } from "../fi/hg/core/LogService";
-import { WhoisLookupResult, WhoisService } from "../fi/hg/core/whois/WhoisService";
+import { WhoisService } from "../fi/hg/core/whois/WhoisService";
 import { createErrorDTO, ErrorDTO } from "../fi/hg/core/types/ErrorDTO";
 import { createWhoisDTO, WhoisDTO } from "../fi/hg/core/whois/types/WhoisDTO";
 import { isString } from "../fi/hg/core/modules/lodash";
+import { WhoisServerRegistryService } from "../fi/hg/core/whois/WhoisServerRegistryService";
+import { WhoisLookupResult } from "../fi/hg/core/whois/types/WhoisLookupResult";
 
 const LOG = LogService.createLogger('FiHgWhoisBackendController');
 
@@ -18,13 +20,18 @@ const LOG = LogService.createLogger('FiHgWhoisBackendController');
 export class FiHgWhoisBackendController {
 
     private static _whois : WhoisService | undefined;
+    private static _whoisServers : WhoisServerRegistryService | undefined;
 
     public static setWhoisService (service : WhoisService) {
         this._whois = service;
     }
 
+    public static setWhoisRegistryService (service : WhoisServerRegistryService) {
+        this._whoisServers = service;
+    }
+
     @GetMapping("/")
-    public static async getIndex (
+    public static async lookup (
         @RequestHeader('Authorization', {
             required: false,
             defaultValue: ''
@@ -39,7 +46,10 @@ export class FiHgWhoisBackendController {
                     createErrorDTO('Lookup address (Query param "a") must be defined and a string', 400)
                 );
             }
-            const payload : readonly WhoisLookupResult[] = await this._whois.whoisLookup(address)
+            const server = this._whoisServers.resolveServerFromAddress(address);
+            LOG.debug(`lookup: "${address}": server: `, server);
+            const payload : readonly WhoisLookupResult[] = await this._whois.whoisLookup(address, {server});
+            LOG.debug(`lookup: "${address}": payload: `, payload);
             return ResponseEntity.ok<WhoisDTO>( createWhoisDTO(payload) );
         } catch (err) {
             LOG.error(`ERROR: `, err);
