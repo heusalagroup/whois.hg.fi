@@ -27,7 +27,7 @@
  * either expressed or implied, of the FreeBSD Project.
  */
 
-import { WhoisServerList } from "../fi/hg/core/whois/WhoisService";
+import { WhoisServerList } from "../fi/hg/core/whois/types/WhoisServerList";
 
 export const SERVERS : WhoisServerList = {
   "br.com": "whois.centralnic.net",
