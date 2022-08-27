@@ -1,6 +1,6 @@
 {
   "name": "hg-whois",
-  "version": "0.1.1",
+  "version": "0.1.2",
   "description": "Whois HTTP Backend",
   "main": "dist/hg-whois.js",
   "scripts": {

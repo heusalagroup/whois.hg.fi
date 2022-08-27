@@ -1,7 +1,7 @@
 version: '3.1'
 
 services:
-  whois.hg.fi-backend:
+  hg-whois-backend:
     build: .
     environment:
       BACKEND_LOG_LEVEL: DEBUG

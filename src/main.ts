@@ -28,6 +28,7 @@ import { BUILD_USAGE_URL, BUILD_WITH_FULL_USAGE } from "./constants/build";
 import { NodeWhoisService } from "./fi/hg/node/services/whois/NodeWhoisService";
 import { SERVERS } from "./constants/servers";
 import { NodeWhoisServerRegistryService } from "./fi/hg/node/services/whois/NodeWhoisServerRegistryService";
+import { JokerComWhoisService } from "./fi/hg/core/com/joker/JokerComWhoisService";
 
 const LOG = LogService.createLogger('main');
 
@@ -62,8 +63,14 @@ export async function main (
             SERVERS
         );
 
+        const jokerWhoisService = new JokerComWhoisService(
+            whoisService,
+            JokerComWhoisService.getJokerServer()
+        );
+
         FiHgWhoisBackendController.setWhoisService(whoisService);
         FiHgWhoisBackendController.setWhoisRegistryService(whoisServerRegistry);
+        FiHgWhoisBackendController.setJokerWhoisService(jokerWhoisService);
 
         const server = new RequestServer(BACKEND_URL);
         server.attachController(FiHgWhoisBackendController);
